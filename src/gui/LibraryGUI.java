@@ -7,6 +7,10 @@ import service.Library;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Graphical User Interface for the Smart Library System.
+ * Allows users to add, search, borrow, return, and display books.
+ */
 public class LibraryGUI extends JFrame {
 
     private Library library = new Library();
@@ -16,8 +20,12 @@ public class LibraryGUI extends JFrame {
     private JButton searchButton;
     private JButton borrowButton;
     private JButton returnButton;
+    private JButton showAllButton;
     private JTextArea outputArea;
 
+    /**
+     * Creates and initializes the Library GUI.
+     */
     public LibraryGUI() {
 
         setTitle("Smart Library System");
@@ -35,23 +43,59 @@ public class LibraryGUI extends JFrame {
         searchButton = new JButton("Search Book");
         borrowButton = new JButton("Borrow Book");
         returnButton = new JButton("Return Book");
+        showAllButton = new JButton("Show All Books");
 
         outputArea = new JTextArea(15, 35);
         outputArea.setEditable(false);
 
+        // Add components
         panel.add(titleLabel);
         panel.add(titleField);
         panel.add(addButton);
         panel.add(searchButton);
         panel.add(borrowButton);
         panel.add(returnButton);
+        panel.add(showAllButton);
 
         add(panel, BorderLayout.NORTH);
         add(new JScrollPane(outputArea), BorderLayout.CENTER);
 
         setVisible(true);
 
-        // Borrow
+        // ---------------------------
+        // ADD BOOK
+        // ---------------------------
+        addButton.addActionListener(e -> {
+            String title = titleField.getText();
+
+            Book book = new Book(
+                    String.valueOf(System.currentTimeMillis()),
+                    title
+            );
+
+            library.addBook(book);
+
+            outputArea.append("Added: " + title + "\n");
+        });
+
+        // ---------------------------
+        // SEARCH BOOK
+        // ---------------------------
+        searchButton.addActionListener(e -> {
+            String title = titleField.getText();
+
+            Book book = library.searchBook(title);
+
+            if (book != null) {
+                outputArea.append("FOUND: " + book.getTitle() + "\n");
+            } else {
+                outputArea.append("Book not found\n");
+            }
+        });
+
+        // ---------------------------
+        // BORROW BOOK
+        // ---------------------------
         borrowButton.addActionListener(e -> {
             String title = titleField.getText();
 
@@ -59,7 +103,7 @@ public class LibraryGUI extends JFrame {
 
             if (book != null && book.isAvailable()) {
 
-                Member dummyMember = new Member("M001", "Test User", "test@mail.com");
+                Member dummyMember = new Member("M001", "Test User");
 
                 library.borrowBook(book, dummyMember);
 
@@ -70,7 +114,9 @@ public class LibraryGUI extends JFrame {
             }
         });
 
-        // Return
+        // ---------------------------
+        // RETURN BOOK
+        // ---------------------------
         returnButton.addActionListener(e -> {
             String title = titleField.getText();
 
@@ -84,6 +130,17 @@ public class LibraryGUI extends JFrame {
 
             } else {
                 outputArea.append("Book not found\n");
+            }
+        });
+
+        // ---------------------------
+        // SHOW ALL BOOKS
+        // ---------------------------
+        showAllButton.addActionListener(e -> {
+            outputArea.setText("");
+
+            for (Book book : library.getAllBooks()) {
+                outputArea.append(book.getTitle() + "\n");
             }
         });
     }
