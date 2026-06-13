@@ -2,6 +2,8 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
+import service.Library;
+import model.Book;
 
 public class LibraryGUI extends JFrame {
 
@@ -9,6 +11,7 @@ public class LibraryGUI extends JFrame {
     private JButton addButton;
     private JButton searchButton;
     private JTextArea outputArea;
+    private Library library = new Library();
 
     public LibraryGUI() {
 
@@ -37,6 +40,24 @@ public class LibraryGUI extends JFrame {
 
         add(panel, BorderLayout.NORTH);
         add(new JScrollPane(outputArea), BorderLayout.CENTER);
+
+        addButton.addActionListener(e -> {
+            String title = titleField.getText();
+            Book book = new Book(String.valueOf(System.currentTimeMillis()), title);
+            library.addBook(book);
+            outputArea.append("Added: " + title + "\n");
+            titleField.setText("");
+        });
+
+        searchButton.addActionListener(e -> {
+            String title = titleField.getText();
+            Book found = library.searchBook(title);
+            if (found != null) {
+                outputArea.append("FOUND: " + found.getTitle() + "\n");
+            } else {
+                outputArea.append("Book not found\n");
+            }
+        });
 
         setVisible(true);
     }
