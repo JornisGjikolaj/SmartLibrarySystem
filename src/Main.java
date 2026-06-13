@@ -1,12 +1,10 @@
-import service.Library;
+import gui.LibraryGUI;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("Smart Library System started!");
-
-        Library library = new Library();
+        new LibraryGUI();
 
     }
 }
