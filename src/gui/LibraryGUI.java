@@ -10,6 +10,7 @@ public class LibraryGUI extends JFrame {
     private JTextField titleField;
     private JButton addButton;
     private JButton searchButton;
+    private JButton showAllButton;
     private JTextArea outputArea;
     private Library library = new Library();
 
@@ -24,11 +25,10 @@ public class LibraryGUI extends JFrame {
         panel.setLayout(new FlowLayout());
 
         JLabel titleLabel = new JLabel("Book Title:");
-
         titleField = new JTextField(20);
-
         addButton = new JButton("Add Book");
         searchButton = new JButton("Search Book");
+        showAllButton = new JButton("Show All Books");
 
         outputArea = new JTextArea(15, 35);
         outputArea.setEditable(false);
@@ -37,6 +37,7 @@ public class LibraryGUI extends JFrame {
         panel.add(titleField);
         panel.add(addButton);
         panel.add(searchButton);
+        panel.add(showAllButton);
 
         add(panel, BorderLayout.NORTH);
         add(new JScrollPane(outputArea), BorderLayout.CENTER);
@@ -56,6 +57,13 @@ public class LibraryGUI extends JFrame {
                 outputArea.append("FOUND: " + found.getTitle() + "\n");
             } else {
                 outputArea.append("Book not found\n");
+            }
+        });
+
+        showAllButton.addActionListener(e -> {
+            outputArea.setText("");
+            for (Book book : library.getAllBooks()) {
+                outputArea.append(book.toString() + "\n");
             }
         });
 
