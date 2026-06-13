@@ -3,7 +3,6 @@ package service;
 import model.Book;
 import model.Member;
 import model.Loan;
-
 import java.util.ArrayList;
 
 public class Library {
@@ -12,4 +11,29 @@ public class Library {
     private ArrayList<Member> members = new ArrayList<>();
     private ArrayList<Loan> loans = new ArrayList<>();
 
+    public void addBook(Book book) {
+        books.add(book);
+    }
+
+    public Book searchBook(String title) {
+        for (Book book : books) {
+            if (book.getTitle().equalsIgnoreCase(title)) {
+                return book;
+            }
+        }
+        return null;
+    }
+
+    public void borrowBook(Book book, Member member) {
+        if (book != null && book.isAvailable()) {
+            book.borrowBook();
+            loans.add(new Loan(book, member));
+        }
+    }
+
+    public void returnBook(Book book) {
+        if (book != null) {
+            book.returnBook();
+        }
+    }
 }
